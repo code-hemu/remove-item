@@ -25,21 +25,28 @@ An array of [`RemoveResult`](#removeresult) objects — one per path.
 
 ## `RemoveOptions`
 
-| Option      | Type      | Default | Description                                |
-|-------------|-----------|---------|--------------------------------------------|
-| `recursive` | `boolean` | `false` | Remove directories recursively             |
-| `force`     | `boolean` | `false` | Ignore missing files and errors            |
-| `verbose`   | `boolean` | `false` | Print operation logs to console            |
-| `dryRun`    | `boolean` | `false` | Preview which files would be removed       |
+| Option        | Type       | Default     | Description                                |
+|---------------|------------|-------------|--------------------------------------------|
+| `recursive`   | `boolean`  | `false`     | Remove directories recursively             |
+| `force`       | `boolean`  | `false`     | Ignore missing files and errors            |
+| `verbose`     | `boolean`  | `false`     | Print operation logs to console            |
+| `dryRun`      | `boolean`  | `false`     | Preview which files would be removed       |
+| `quiet`       | `boolean`  | `false`     | Suppress all non-error output              |
+| `interactive` | `boolean`  | `false`     | Prompt before each removal                 |
+| `allowRoot`   | `boolean`  | `false`     | Allow removing root directory (`/` or `C:\`) |
+| `include`     | `string[]` | `undefined` | Only remove paths matching these patterns  |
+| `exclude`     | `string[]` | `undefined` | Skip paths matching these patterns         |
+| `maxDepth`    | `number`   | `undefined` | Limit recursion depth                      |
 
 
 ## `RemoveResult`
 
 | Field     | Type     | Description                              |
 |-----------|----------|------------------------------------------|
-| `path`    | `string` | Resolved absolute path of the target     |
-| `success` | `boolean`| Whether the removal succeeded            |
-| `error`   | `Error?` | The error object if `success` is `false`  |
+| `path`    | `string`   | Resolved absolute path of the target        |
+| `success` | `boolean`  | Whether the removal succeeded              |
+| `error`   | `Error?`   | The error object if `success` is `false`    |
+| `skipped` | `boolean?` | Whether the path was skipped (e.g. force-skipped or depth-limited) |
 
 
 ## Errors
@@ -103,6 +110,44 @@ for (const r of results) {
     console.error(`✗ ${r.path}: ${r.error?.message}`);
   }
 }
+```
+
+### Selective removal with patterns
+
+```ts
+await removeItem("src", {
+  recursive: true,
+  include: ["*.ts", "*.tsx"],
+  exclude: ["*.test.ts", "__tests__/**"],
+});
+```
+
+### Interactive removal
+
+```ts
+await removeItem("dist", {
+  recursive: true,
+  interactive: true,
+});
+```
+
+### Limit depth
+
+```ts
+await removeItem("node_modules", {
+  recursive: true,
+  maxDepth: 2,
+});
+```
+
+### Quiet mode
+
+```ts
+await removeItem("temp", {
+  recursive: true,
+  force: true,
+  quiet: true,
+});
 ```
 
 ### Error handling

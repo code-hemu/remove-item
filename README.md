@@ -113,10 +113,16 @@ await removeItem("build", {
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `recursive` | `boolean` | `false` | Removes directories and all of their contents recursively |
-| `force` | `boolean` | `false` | Ignores errors for missing files or already-deleted targets |
-| `verbose` | `boolean` | `false` | Prints operation logs to stdout for each path processed |
-| `dryRun` | `boolean` | `false` | Simulates the operation without making any changes — useful for previewing what would be deleted |
+| `recursive` | `boolean` | `false` | Remove directories recursively |
+| `force` | `boolean` | `false` | Ignore missing files and errors |
+| `verbose` | `boolean` | `false` | Print operation logs |
+| `dryRun` | `boolean` | `false` | Preview without deleting |
+| `quiet` | `boolean` | `false` | Suppress all non-error output |
+| `interactive` | `boolean` | `false` | Prompt before each removal |
+| `allowRoot` | `boolean` | `false` | Allow removing root directory (`/` or `C:\`) |
+| `include` | `string[]` | `undefined` | Only remove paths matching these patterns |
+| `exclude` | `string[]` | `undefined` | Skip paths matching these patterns |
+| `maxDepth` | `number` | `undefined` | Limit recursion depth |
 
 
 ## CLI Examples
@@ -146,6 +152,63 @@ remove-item \
   --force
 ```
 
+### Glob pattern removal
+
+Remove all files matching a pattern. Glob characters (`*`, `?`) are expanded automatically.
+
+```bash
+remove-item "*.log" --force
+remove-item "test-*.js" "temp-*"
+```
+
+### Include and exclude patterns
+
+Combine with `--recursive` to filter which files are removed inside a directory.
+Patterns are matched against each entry's filename and can be repeated or comma-separated.
+
+```bash
+# Only remove .ts files
+remove-item src --recursive --include "*.ts"
+
+# Remove everything except .json files
+remove-item . --recursive --exclude "*.json"
+
+# Multiple patterns
+remove-item build --recursive --include "*.js,*.css" --exclude "*.min.*"
+```
+
+### Quiet mode
+
+Suppress all non-error output. Useful in CI scripts where you only care about failures.
+
+```bash
+remove-item cache --recursive --force --quiet
+```
+
+### Interactive mode
+
+Prompt before each deletion. A safety net for risky cleanups.
+
+```bash
+remove-item dist --recursive --interactive
+```
+
+### Limit recursion depth
+
+Prevent the deletion from going too deep into nested directories.
+
+```bash
+remove-item node_modules --recursive --max-depth 2
+```
+
+### Override root protection
+
+By default, `remove-item` refuses to remove the filesystem root (`/` or `C:\`).
+Use `--allow-root` to override.
+
+```bash
+remove-item / --recursive --force --allow-root
+```
 ## TypeScript
 
 `remove-item` is written in TypeScript and ships with type declarations included. No `@types` package needed — just import and use.
@@ -159,13 +222,14 @@ await removeItem("temporary-folder");
 The options object is fully typed, giving you autocomplete and compile-time validation in editors like VS Code and WebStorm.
 
 ```typescript
-import { removeItem, RemoveItemOptions } from "remove-item";
+import { removeItem, RemoveOptions } from "remove-item";
 
-const options: RemoveItemOptions = {
+const options: RemoveOptions = {
   recursive: true,
   force: true,
-  dryRun: false,
-  verbose: true
+  verbose: true,
+  include: ["*.ts", "*.js"],
+  maxDepth: 3,
 };
 
 await removeItem("./output", options);
@@ -213,6 +277,11 @@ How `remove-item` compares to the most popular alternative:
 | TypeScript | ✅ | ✅ |
 | ESM support | ✅ | ✅ |
 | Uses modern `fs.rm` API | ✅ | Depends on version |
+| Glob pattern support | ✅ | ✅ |
+| Include/exclude filters | ✅ | ❌ |
+| Interactive mode | ✅ | ❌ |
+| Max depth limit | ✅ | ❌ |
+| Root protection | ✅ | ❌ |
 | PowerShell-style naming | ✅ | ❌ |
 
 `remove-item` is built on Node.js's native `fs.rm` API (introduced in Node 14.14), which is the current recommended approach for file removal. No custom recursive logic or shell delegation involved.

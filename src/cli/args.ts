@@ -9,7 +9,8 @@ export function parseArgs(argv: string[]): ParsedArgs {
   const paths: string[] = [];
   const options: RemoveOptions = {};
 
-  for (const arg of argv) {
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
     switch (arg) {
       case "--recursive":
       case "-r":
@@ -26,6 +27,34 @@ export function parseArgs(argv: string[]): ParsedArgs {
       case "--dry-run":
         options.dryRun = true;
         break;
+      case "--quiet":
+      case "-q":
+        options.quiet = true;
+        break;
+      case "--interactive":
+      case "-i":
+        options.interactive = true;
+        break;
+      case "--allow-root":
+        options.allowRoot = true;
+        break;
+      case "--max-depth": {
+        const val = argv[++i];
+        options.maxDepth = Number(val);
+        break;
+      }
+      case "--include": {
+        const val = argv[++i];
+        const patterns = val.split(",").map((s) => s.trim()).filter(Boolean);
+        (options.include ??= []).push(...patterns);
+        break;
+      }
+      case "--exclude": {
+        const val = argv[++i];
+        const patterns = val.split(",").map((s) => s.trim()).filter(Boolean);
+        (options.exclude ??= []).push(...patterns);
+        break;
+      }
       default:
         if (arg.startsWith("-")) {
           // unknown flag, ignore

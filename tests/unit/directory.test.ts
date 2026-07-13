@@ -82,4 +82,55 @@ describe("removeDirectory", () => {
     assert.equal(result.success, false);
     assert.ok(result.error?.message.includes("Not a directory"));
   });
+
+  it("include filter removes matching files only", async () => {
+    const dir = await createDir("include-filter");
+    await createFileIn(dir, "keep.js");
+    await createFileIn(dir, "remove.ts");
+    const result = await removeDirectory(dir, {
+      recursive: true,
+      include: ["*.ts"],
+    });
+    assert.equal(result.success, true);
+    await stat(join(dir, "keep.js"));
+    await assert.rejects(() => stat(join(dir, "remove.ts")));
+  });
+
+  it("exclude filter skips matching files", async () => {
+    const dir = await createDir("exclude-filter");
+    await createFileIn(dir, "remove.js");
+    await createFileIn(dir, "keep.json");
+    const result = await removeDirectory(dir, {
+      recursive: true,
+      exclude: ["*.json"],
+    });
+    assert.equal(result.success, true);
+    await assert.rejects(() => stat(join(dir, "remove.js")));
+    await stat(join(dir, "keep.json"));
+  });
+
+  it("maxDepth preserves nested files beyond depth", async () => {
+    const dir = await createDir("max-depth-nest");
+    const sub = join(dir, "sub");
+    await mkdir(sub);
+    await createFileIn(sub, "deep.txt");
+    const result = await removeDirectory(dir, {
+      recursive: true,
+      maxDepth: 1,
+    });
+    assert.equal(result.success, true);
+    await stat(join(sub, "deep.txt"));
+  });
+
+  it("maxDepth removes empty subdirectories at depth", async () => {
+    const dir = await createDir("max-depth-empty");
+    const sub = join(dir, "empty");
+    await mkdir(sub);
+    const result = await removeDirectory(dir, {
+      recursive: true,
+      maxDepth: 1,
+    });
+    assert.equal(result.success, true);
+    await assert.rejects(() => stat(sub));
+  });
 });

@@ -3,6 +3,9 @@ export const DEFAULT_OPTIONS = {
   force: false,
   verbose: false,
   dryRun: false,
+  quiet: false,
+  interactive: false,
+  allowRoot: false,
 } as const;
 
 export const ERRORS = {
@@ -11,4 +14,6 @@ export const ERRORS = {
   NOT_DIRECTORY: (path: string) => `Not a directory: ${path}`,
   PERMISSION_DENIED: (path: string) => `Permission denied: ${path}`,
   REMOVE_FAILED: (path: string) => `Failed to remove: ${path}`,
+  ROOT_REFUSAL: (path: string) =>
+    `Refusing to remove root directory: ${path}. Use --allow-root to override.`,
 } as const;

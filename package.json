@@ -1,6 +1,6 @@
 {
   "name": "remove-item",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Node.js utility inspired by PowerShell Remove-Item.",
   "homepage": "https://github.com/code-hemu/remove-item#readme",
   "bugs": {
@@ -41,6 +41,7 @@
     "delete",
     "rm",
     "rm-rf",
+    "remove-item",
     "rimraf",
     "filesystem",
     "cleanup",

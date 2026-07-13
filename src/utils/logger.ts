@@ -1,19 +1,29 @@
 const PREFIX = "[remove-item]";
 
+let isQuiet = false;
+
+export function setQuiet(quiet: boolean): void {
+  isQuiet = quiet;
+}
+
 export function log(message: string): void {
-  console.log(`${PREFIX} ${message}`);
+  if (!isQuiet) {
+    console.log(`${PREFIX} ${message}`);
+  }
 }
 
 export function warn(message: string): void {
-  console.warn(`${PREFIX} ${message}`);
+  if (!isQuiet) {
+    console.warn(`${PREFIX} ${message}`);
+  }
 }
 
 export function error(message: string): void {
   console.error(`${PREFIX} ${message}`);
 }
 
-export function verbose(message: string, isVerbose: boolean): void {
-  if (isVerbose) {
+export function verbose(message: string, isVerbose: boolean, quiet?: boolean): void {
+  if (isVerbose && !(quiet ?? isQuiet)) {
     log(message);
   }
 }

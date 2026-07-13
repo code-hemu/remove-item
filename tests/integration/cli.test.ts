@@ -94,4 +94,49 @@ describe("CLI", () => {
     assert.equal(status, 1);
     assert.ok(stdout.includes("Failed") || stderr.length >= 0);
   });
+
+  it("--quiet suppresses output with --force on missing path", () => {
+    const { stdout, status } = run(["ghost.txt", "--force", "--quiet"]);
+    assert.equal(stdout, "");
+    assert.equal(status, 0);
+  });
+
+  it("--quiet suppresses output on successful removal", async () => {
+    const file = await createFile("quiet-remove.txt");
+    const { stdout, status } = run([file, "--quiet"]);
+    assert.equal(stdout, "");
+    assert.equal(status, 0);
+  });
+
+  it("--include filters removal", async () => {
+    const dir = await createDir("cli-include");
+    await createFile(join("cli-include", "a.js"));
+    await createFile(join("cli-include", "b.ts"));
+    const { status } = run([dir, "--recursive", "--include", "*.js"]);
+    assert.equal(status, 0);
+    await assert.rejects(() => stat(join(dir, "a.js")));
+    await stat(join(dir, "b.ts"));
+  });
+
+  it("--max-depth limits recursion", async () => {
+    const dir = await createDir("cli-depth");
+    const sub = join(dir, "sub");
+    await mkdir(sub);
+    await createFile(join("cli-depth", "root.txt"));
+    await createFile(join("cli-depth", "sub", "deep.txt"));
+    const { status } = run([dir, "--recursive", "--max-depth", "1"]);
+    assert.equal(status, 0);
+    await assert.rejects(() => stat(join(dir, "root.txt")));
+    await stat(join(dir, "sub", "deep.txt"));
+  });
+
+  it("expands glob patterns in paths", async () => {
+    await createFile("glob-a.js");
+    await createFile("glob-b.ts");
+    const { status, stdout } = run(["glob-*.js"]);
+    assert.equal(status, 0);
+    assert.ok(stdout.includes("glob-a.js"));
+    await assert.rejects(() => stat(join(testDir, "glob-a.js")));
+    await stat(join(testDir, "glob-b.ts"));
+  });
 });
