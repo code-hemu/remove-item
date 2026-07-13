@@ -1,6 +1,6 @@
 {
   "name": "remove-item",
-  "version": "0.0.2",
+  "version": "1.0.1",
   "description": "A Node.js utility inspired by PowerShell Remove-Item.",
   "homepage": "https://github.com/code-hemu/remove-item#readme",
   "bugs": {
