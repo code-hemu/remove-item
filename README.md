@@ -1,119 +1,96 @@
-<p align="center">
-  <b>A cross-platform file removal utility for Node.js</b>
-</p>
-
-<p align="center">
-  Remove files and directories with a simple CLI.<br/>
-  Inspired by PowerShell <code>Remove-Item</code>.
-</p>
-
-<p align="center">
+The [PowerShell command](<https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-item>) `Remove-Item` for Node.js in a cross-platform implementation.
 
 ![npm version](https://img.shields.io/npm/v/remove-item)
 ![license](https://img.shields.io/npm/l/remove-item)
 ![node](https://img.shields.io/node/v/remove-item)
 
-</p>
+> [!CAUTION]
+>
+> ## ⚠️ `remove-item` permanently deletes files and directories.
+>
+> Always double-check your target paths before running removal commands.
+> Prefer relative paths scoped to your project directory, and avoid passing user-supplied strings directly without validation.
+> 
+> For safer workflows, use `dryRun` first to preview what will be deleted:
+>
+> ```javascript
+> await removeItem("./generated", {
+>   dryRun: true
+> });
+> ```
+> If you discover a security vulnerability in `remove-item`, please report it privately by emailing the maintainer directly.
+> Do not open a public GitHub issue for security-related bugs, as this may expose users before a fix is available.
 
-## Features
-
-* Directory removal
-* Cross-platform support
-* Windows support
-* Linux support
-* macOS support
-* Recursive directory deletion
-* Promise-based API
-* ESM support
-* TypeScript support
-* Powerful CLI
-* Production tested
-
-
-## Documentation
-
-| Resource | Description |
-|----------|-------------|
-| [`docs/api.md`](docs/api.md) | Full Node.js API reference |
-| [`docs/cli.md`](docs/cli.md) | Full CLI reference and options |
-| [`examples/basic.js`](examples/basic.js) | Basic usage examples |
-| [`examples/advanced.js`](examples/advanced.js) | Advanced patterns (dry-run, conditional cleanup) |
-
-# Installation
-
-## npm
-
+Install `remove-item` using your preferred package manager.
 ```bash
 npm install remove-item
 ```
 
-## pnpm
+## CLI Usage
 
-```bash
-pnpm add remove-item
-```
+The `remove-item` CLI lets you delete files and directories directly from your terminal, with consistent behavior across all platforms. No shell-specific syntax required.
 
-## yarn
+> See [`docs/cli.md`](docs/cli.md) for the full CLI reference, all flags, and exit code documentation.
 
-```bash
-yarn add remove-item
-```
+### Remove a single file
 
----
-
-# CLI Usage
-
-> See [`docs/cli.md`](docs/cli.md) for the full CLI reference.
-
-## Remove a file
+Deletes a specific file by path.
 
 ```bash
 remove-item file.txt
 ```
 
-## Remove a directory
+### Remove a directory
+
+Deletes an empty directory. Use `--recursive` for non-empty directories.
 
 ```bash
 remove-item dist
 ```
 
-## Remove recursively
+### Remove recursively
+
+Deletes a directory and all of its contents - subdirectories and files included.
 
 ```bash
 remove-item node_modules --recursive
 ```
 
-## Force removal
+### Force removal
+
+Suppresses errors for missing files and non-empty directories. Useful in CI and cleanup scripts where the target may or may not exist.
 
 ```bash
 remove-item cache --recursive --force
 ```
 
-## Multiple targets
+### Remove multiple targets
+
+Pass multiple paths in a single command. All targets are resolved and removed in sequence.
 
 ```bash
 remove-item dist coverage .cache --recursive --force
 ```
+## Node.js API
 
-# Node.js API
+Use `remove-item` programmatically in your Node.js scripts and build tools. The API is promise-based and fully async.
 
-> See [`docs/api.md`](docs/api.md) for the full API reference.
+> See [`docs/api.md`](docs/api.md) for the complete API reference, including return types, option schemas, and extended examples.
 
-## ESM
+### ESM Import
 
 ```javascript
 import { removeItem } from "remove-item";
-
 
 await removeItem("dist");
 ```
 
+### Remove Multiple Paths
 
-## Multiple paths
+Pass an array of paths to remove several targets in a single call.
 
 ```javascript
 import { removeItem } from "remove-item";
-
 
 await removeItem([
   "dist",
@@ -122,9 +99,9 @@ await removeItem([
 ]);
 ```
 
----
-
 ## Options
+
+Customize removal behavior by passing an options object as the second argument.
 
 ```javascript
 await removeItem("build", {
@@ -133,196 +110,124 @@ await removeItem("build", {
 });
 ```
 
-| Option    | Type    | Default | Description                     |
-| --------- | ------- | ------- | ------------------------------- |
-| recursive | boolean | false   | Remove directories recursively  |
-| force     | boolean | false   | Ignore missing files and errors |
-| verbose   | boolean | false   | Show operation logs             |
-| dryRun    | boolean | false   | Preview deletion                |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `recursive` | `boolean` | `false` | Removes directories and all of their contents recursively |
+| `force` | `boolean` | `false` | Ignores errors for missing files or already-deleted targets |
+| `verbose` | `boolean` | `false` | Prints operation logs to stdout for each path processed |
+| `dryRun` | `boolean` | `false` | Simulates the operation without making any changes — useful for previewing what would be deleted |
 
 
-# Why remove-item?
+## CLI Examples
 
-Traditional commands are platform dependent:
+Common real-world usage patterns for CI pipelines, build scripts, and local development workflows.
 
-### Unix
-
-```bash
-rm -rf folder
-```
-
-### PowerShell
-
-```powershell
-Remove-Item folder -Recurse -Force
-```
-
-`remove-item` provides a consistent Node.js experience:
-
-```javascript
-await removeItem("folder");
-```
-
-Works everywhere:
-
-```
-Windows ✓
-Linux   ✓
-macOS   ✓
-```
-
-# CLI Examples
-
-## Clean build files
+### Clean build output
 
 ```bash
 remove-item dist --recursive
 ```
 
-## Remove dependencies
+### Remove installed dependencies
 
 ```bash
 remove-item node_modules --recursive --force
 ```
 
-## Clean project
+### Full project cleanup in one command
 
 ```bash
 remove-item \
-dist \
-coverage \
-.cache \
---recursive \
---force
+  dist \
+  coverage \
+  .cache \
+  --recursive \
+  --force
 ```
 
-# TypeScript
+## TypeScript
 
-Built with first-class TypeScript support.
+`remove-item` is written in TypeScript and ships with type declarations included. No `@types` package needed — just import and use.
 
 ```typescript
-import {
-  removeItem
-} from "remove-item";
-
+import { removeItem } from "remove-item";
 
 await removeItem("temporary-folder");
 ```
 
-Types are included automatically.
+The options object is fully typed, giving you autocomplete and compile-time validation in editors like VS Code and WebStorm.
 
+```typescript
+import { removeItem, RemoveItemOptions } from "remove-item";
 
-# Error Handling
+const options: RemoveItemOptions = {
+  recursive: true,
+  force: true,
+  dryRun: false,
+  verbose: true
+};
+
+await removeItem("./output", options);
+```
+
+## Error Handling
+
+`remove-item` throws on failure by default. Wrap calls in a `try/catch` block to handle errors gracefully in production scripts.
 
 ```javascript
 try {
-
   await removeItem("temp");
-
   console.log("Removed successfully");
-
 } catch (error) {
-
-  console.error(error);
-
+  console.error("Removal failed:", error.message);
 }
 ```
 
-# Safety
-
-⚠️ `remove-item` permanently deletes files.
-
-Always verify paths before executing deletion commands.
-
-For safer workflows:
+To suppress errors for missing or already-deleted paths, use the `force` option instead of catching manually:
 
 ```javascript
-await removeItem("./generated", {
-  dryRun: true
-});
+await removeItem("temp", { force: true });
 ```
 
-# Examples
 
-Run ready-to-use examples:
+## Examples
 
-```bash
-node examples/basic.js
-node examples/advanced.js
-```
+Ready-to-run example scripts are included in the `examples/` directory. Clone the repo and run them directly with Node.js.
 
 | File | Description |
 |------|-------------|
-| [`examples/basic.js`](examples/basic.js) | Single file, multiple files, recursive, force, dryRun, error handling |
-| [`examples/advanced.js`](examples/advanced.js) | Mixed cleanup, result inspection, dry-run → confirm workflow, conditional cleanup by file age |
+| [`examples/basic.js`](examples/basic.js) | Covers single file removal, multiple files, recursive deletion, force mode, dry-run preview, and error handling |
+| [`examples/advanced.js`](examples/advanced.js) | Demonstrates mixed cleanup strategies, result inspection, dry-run confirmation workflows, and conditional deletion based on file age |
 
 
-# Comparison
+## Comparison
 
-| Feature              | remove-item | rimraf  |
-| -------------------- | ----------- | ------- |
-| Cross-platform       | ✅           | ✅       |
-| Node API             | ✅           | ✅       |
-| CLI                  | ✅           | ✅       |
-| TypeScript           | ✅           | ✅       |
-| ESM                  | ✅           | ✅       |
-| Modern fs.rm API     | ✅           | Depends |
-| PowerShell style API | ✅           | ❌       |
+How `remove-item` compares to the most popular alternative:
 
+| Feature | remove-item | rimraf |
+|---------|-------------|--------|
+| Cross-platform | ✅ | ✅ |
+| Node.js API | ✅ | ✅ |
+| CLI | ✅ | ✅ |
+| TypeScript | ✅ | ✅ |
+| ESM support | ✅ | ✅ |
+| Uses modern `fs.rm` API | ✅ | Depends on version |
+| PowerShell-style naming | ✅ | ❌ |
 
-# Development
+`remove-item` is built on Node.js's native `fs.rm` API (introduced in Node 14.14), which is the current recommended approach for file removal. No custom recursive logic or shell delegation involved.
 
-Clone:
+## License
 
-```bash
-git clone https://github.com/YOUR_USERNAME/remove-item.git
-```
+`remove-item` is released under the **MIT License**.
 
-Install:
-
-```bash
-npm install
-```
-
-Build:
-
-```bash
-npm run build
-```
-
-Test:
-
-```bash
-npm test
-```
-
-# Contributing
-
-Contributions, issues, and feature requests are welcome.
-
-Please read:
-
-* CONTRIBUTING.md
-* CODE_OF_CONDUCT.md
-
-before submitting a pull request.
+Copyright © [Hemanta Gayen](https://github.com/hemanta-gayen). See [`LICENSE`](LICENSE) for the full license text.
 
 
-# Security
+## Acknowledgements
 
-If you discover a security issue, please report it privately.
+`remove-item` draws inspiration from:
 
-Do not open a public issue for security vulnerabilities.
+- **PowerShell `Remove-Item`** - the naming convention and flag structure that makes deletion intuitive on Windows
+- **Unix `rm -rf`** - the gold standard for fast, recursive removal on Unix-like systems
+- **Node.js `fs.rm` / `fs.rmdir`** - the underlying platform APIs that make cross-platform consistency possible
 
-
-# License
-
-Remove-item is licensed under **MIT**. Copyright © [Hemanta Gayen](https://github.com/hemanta-gayen).
-
-# Acknowledgements
-
-Inspired by:
-
-* PowerShell `Remove-Item`
-* Unix `rm -rf`
-* Node.js filesystem APIs
