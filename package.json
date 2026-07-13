@@ -1,0 +1,57 @@
+{
+  "name": "remove-item",
+  "version": "0.0.2",
+  "description": "A Node.js utility inspired by PowerShell Remove-Item.",
+  "homepage": "https://github.com/code-hemu/remove-item#readme",
+  "bugs": {
+    "url": "https://github.com/code-hemu/remove-item/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code-hemu/remove-item.git"
+  },
+  "license": "MIT",
+  "author": "Hemanta Gayen",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "remove-item": "./bin/remove-item.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "remove",
+    "delete",
+    "rm",
+    "rm-rf",
+    "rimraf",
+    "filesystem",
+    "cleanup",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  }
+}
