@@ -22,7 +22,6 @@ function removeItem(
 
 An array of [`RemoveResult`](#removeresult) objects — one per path.
 
----
 
 ## `RemoveOptions`
 
@@ -33,7 +32,6 @@ An array of [`RemoveResult`](#removeresult) objects — one per path.
 | `verbose`   | `boolean` | `false` | Print operation logs to console            |
 | `dryRun`    | `boolean` | `false` | Preview which files would be removed       |
 
----
 
 ## `RemoveResult`
 
@@ -43,7 +41,6 @@ An array of [`RemoveResult`](#removeresult) objects — one per path.
 | `success` | `boolean`| Whether the removal succeeded            |
 | `error`   | `Error?` | The error object if `success` is `false`  |
 
----
 
 ## Errors
 
@@ -54,7 +51,6 @@ An array of [`RemoveResult`](#removeresult) objects — one per path.
 
 Both extend `RemoveItemError`, which has a `.code` property.
 
----
 
 ## Examples
 
@@ -89,7 +85,7 @@ await removeItem("cache", { recursive: true, force: true });
 ```ts
 const results = await removeItem("dist", { dryRun: true });
 console.log(results);
-// → [{ path: "/cwd/dist", success: true }]
+// [{ path: "/cwd/dist", success: true }]
 ```
 
 ### Handle results

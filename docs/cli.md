@@ -8,7 +8,6 @@ remove-item <path...> [options]
 
 One or more file or directory paths can be specified.
 
----
 
 ## Options
 
@@ -20,7 +19,6 @@ One or more file or directory paths can be specified.
 | `--dry-run`       | Show what would be deleted without doing |
 | `-h, --help`      | Display help text and exit               |
 
----
 
 ## Exit Codes
 
@@ -29,7 +27,6 @@ One or more file or directory paths can be specified.
 | `0`  | All paths removed successfully     |
 | `1`  | One or more paths failed, or no args given |
 
----
 
 ## Examples
 
