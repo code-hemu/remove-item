@@ -211,7 +211,7 @@ remove-item / --recursive --force --allow-root
 ```
 ## TypeScript
 
-`remove-item` is written in TypeScript and ships with type declarations included. No `@types` package needed — just import and use.
+`remove-item` is written in TypeScript and ships with type declarations included. No `@types` package needed - just import and use.
 
 ```typescript
 import { removeItem } from "remove-item";
