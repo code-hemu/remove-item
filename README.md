@@ -1,8 +1,9 @@
 The [PowerShell command](<https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-item>) `Remove-Item` for Node.js in a cross-platform implementation.
 
-![npm version](https://img.shields.io/npm/v/remove-item)
-![license](https://img.shields.io/npm/l/remove-item)
-![contributors](https://img.shields.io/github/contributors/code-hemu/remove-item)
+<a href="https://www.npmjs.com/package/remove-item"><img src="https://img.shields.io/npm/v/remove-item" alt="Version"></a>
+<a href="https://github.com/code-hemu/remove-item/blob/master/LICENSE"><img src="https://img.shields.io/github/license/code-hemu/remove-item" alt="License"></a>
+<a href="https://github.com/code-hemu/remove-item/graphs/contributors"><img src="https://img.shields.io/github/contributors/code-hemu/remove-item" alt="contributors"></a>
+
 
 > [!CAUTION]
 >
