@@ -2,7 +2,7 @@ The [PowerShell command](<https://learn.microsoft.com/en-us/powershell/module/mi
 
 ![npm version](https://img.shields.io/npm/v/remove-item)
 ![license](https://img.shields.io/npm/l/remove-item)
-![issues](https://img.shields.io/github/issues/code-hemu/remove-item)
+![contributors](https://img.shields.io/github/contributors/code-hemu/remove-item)
 
 > [!CAUTION]
 >
