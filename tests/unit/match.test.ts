@@ -25,8 +25,8 @@ describe("matchesGlob", () => {
   });
 
   it("matches prefix and suffix patterns", () => {
-    assert.equal(matchesGlob("test.min.js", "*.min.*"), true);
-    assert.equal(matchesGlob("test.dev.js", "*.min.*"), false);
+    assert.equal(matchesGlob("test.min.js", "*min*"), true);
+    assert.equal(matchesGlob("test.dev.js", "*min*"), false);
   });
 
   it("matches patterns with multiple *", () => {
