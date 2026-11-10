@@ -52,9 +52,9 @@
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
+    "globefish": "^1.2.0",
     "tsx": "^4.23.1",
-    "typescript": "^7.0.2",
-    "globefish": "^1.2.0"
+    "typescript": "^7.0.2"
   },
   "dependencies": {
     "globefish": "^1.2.0"
